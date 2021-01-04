@@ -1,0 +1,38 @@
+.user-login-form{
+    width :400px;
+    margin: auto;
+    height: 400px;
+    background-color: white;
+    display: grid;
+    padding:30px;
+    grid-template-rows: auto 8% auto 8%;
+    .title {
+       text-align: center;
+    }
+    .email-label {
+       
+    }
+    .input-email{
+       border: 1px solid;
+       border-color: #2699FB;
+    }
+    .input-password{
+       border: 1px solid;
+       border-color: #2699FB;
+    }
+    .password-label {
+       
+    }
+    .btn{
+       border-radius: 25px;
+       border: #2699FB;
+       
+    }
+    .active-btn{
+       background-color: #2699FB;
+       color:white;
+    }
+    .each-element{
+       margin:5px;
+    }
+ }

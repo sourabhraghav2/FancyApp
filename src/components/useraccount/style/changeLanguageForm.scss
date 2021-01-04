@@ -1,0 +1,43 @@
+.change-language-form{
+    width :400px;
+    margin: auto;
+    height: 210px;
+    background-color: white;
+    display: grid;
+    padding:30px;
+    grid-template-rows:  8% 54px 8% auto 54px;
+    
+    .title {
+       text-align: center;
+    }
+    
+
+    .input-language{
+       border: 1px solid;
+       border-color: #2699FB;
+       .each-language {
+         color:#2699FB;
+       }
+    }
+    
+    .privacy-label  {
+      padding-top: 5px;
+    }
+    .privacy-type  {
+      padding-top: 15px;
+      
+   }
+
+    .btn{
+       border-radius: 25px;
+       border: #2699FB;
+       
+    }
+    .active-btn{
+       background-color: #2699FB;
+       color:white;
+    }
+    .each-element{
+       margin:5px;
+    }
+ }

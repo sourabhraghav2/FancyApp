@@ -1,0 +1,7 @@
+export enum ScreenType{
+    LOGIN_FORM,
+    CREATE_ACCOUNT_FORM,
+    CHANGE_LANGUAGE_FORM,
+    SECURITY_MODIFICATION
+}
+  

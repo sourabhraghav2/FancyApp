@@ -1,0 +1,33 @@
+.left-menu{
+    display: grid;
+    grid-template-rows:10% 10% auto 10%;
+    width :250px;
+    background-color: lightcyan;
+    padding-top:10px;
+    padding-bottom:10px;
+    .menu-btn{
+       cursor: pointer;
+       margin: 10px;
+       text-align: center;
+       border: dotted 2px #2699FB;
+       color: #2699FB;
+       padding: 5px;
+    }
+    .active-btn {
+       background-color: #2699FB;
+       border: none;
+       color: white;
+    }
+    .general-button {
+       
+    }
+    .security-button {
+       
+    }
+    .empty {
+       border: none;
+    }
+    .logout {
+       
+    }
+ }
