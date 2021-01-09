@@ -1,32 +1,21 @@
-import moment from 'moment'
+import {CookiesHelper}  from "./cookieHelper";
+const cookieService=CookiesHelper()
+
 const inMemoryJWTManager = () => {
-    let inMemoryJWT = null;
-
-    // This listener allows to disconnect another session of react-admin started in another tab
-    window.addEventListener('storage', (event) => {
-        if (event.key === 'ra-logout') {
-            inMemoryJWT = null;
-        }
-    });
-
-    const getToken = () => inMemoryJWT;
-
-    const setToken = (token) => {
-        inMemoryJWT = token;
+    const getToken = () => cookieService.readCookie('jwt');
+    const setToken = (tokken:string) => {
+        cookieService.createCookie('jwt', tokken,1);
         return true;
     };
-
     const ereaseToken = () => {
-        inMemoryJWT = null;
-        window.localStorage.setItem('ra-logout',moment().format("DD-MM-YYYY"));
         return true;
     }
-
     return {
         ereaseToken,
         getToken,
-        setToken,
+        setToken
     }
 };
+
 
 export default inMemoryJWTManager();

@@ -1,37 +1,56 @@
+import { MessageProperties } from "components/useraccount/landingPage";
 import { HttpRequest, HttpResponse } from "model/generic";
+import inMemoryJWTManager from 'security/inMemoryJWTManager';
 
 export const HttpService=()=> {
-   const baseUrl='http://localhost:8080/'
-    const post=async(request:HttpRequest,to:string):Promise<HttpResponse>=>{
-            try {
-                const requestOptions = {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(request)
-                };
-               return  await fetch(`${baseUrl}${to}`,requestOptions)
-                .then(res => res.json())
-                .then((data) => {
-                    return data 
-                })
-                .catch(console.log) as HttpResponse
-            } catch (e) {
-                return {isSuccess:false} as HttpResponse;
-            }
+    const defaultErrorMessage={
+        msg:'Network issue try again',
+        isSuccess:false
+    } as MessageProperties
+    const baseUrl='http://localhost:3020/'
+    const post=async(request:HttpRequest,to:string):Promise<HttpResponse>=>{ 
+        const jwtToken=inMemoryJWTManager.getToken()
+        const Authorization=`Bearer ${jwtToken}`
+        console.log ('Authorization: ',Authorization)
+        const requestOptions = {
+            method: 'POST',
+            headers: { 
+                'Content-Type': 'application/json' ,
+                'Authorization':Authorization
+            },
+            body: JSON.stringify(request)
+        };
+        return  await fetch(`${baseUrl}${to}`,requestOptions)
+        .then(res => res.json())
+        .then((data) => {
+            return data 
+        })
+        .catch(()=>{
+            return defaultErrorMessage;
+        })   
     }
 
-    const get=async(to:string):Promise<boolean>=>{
+    const get=async(to:string):Promise<any>=>{
+        const jwtToken=inMemoryJWTManager.getToken()
+        const Authorization=`Bearer ${jwtToken}`
+        const url =`${baseUrl}${to}`
         try {
-            const response= await fetch(`${baseUrl}${to}` )
+            const requestOptions = {
+                method: 'GET',
+                headers: { 
+                    Authorization
+                }
+            };
+            const response= await fetch(url, requestOptions)
             .then(res => res.json())
             .then((data) => {
                 return data
             })
-            .catch(console.log)
-            console.log ('Response : ',JSON.stringify(response))
-            return true
+            .catch((e)=>{console.log('Error : ',e)
+                return defaultErrorMessage})
+            return response
         } catch (e) {
-            return false
+            return defaultErrorMessage
         }
     }
     return {

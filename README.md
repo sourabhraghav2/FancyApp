@@ -1,2 +1,0 @@
-# FancyApp
-React + Node js

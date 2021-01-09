@@ -1,5 +1,7 @@
 export interface HttpResponse {
-    isSuccess:boolean
+    isSuccess:boolean,
+    msg:string
+
 }
 export interface HttpRequest {
 

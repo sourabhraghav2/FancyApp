@@ -1,16 +1,42 @@
-import React, {useState} from 'react'
+import React, {useState,useEffect} from 'react'
 import 'components/useraccount/style/securityModification.scss';
+import Translation from 'language/LanguageModel';
+import { MessageProperties } from './landingPage';
 
 
-const ChangePassword= ({changePasswordHandler})=>{
+interface ChangePasswordProp{
+  changePasswordHandler,
+  displayMessage:MessageProperties,
+  viewModel:Translation
+}
+interface SecurityModificationProp {
+  deleteAccountHandler,
+  changePasswordHandler,
+  changePasswordMessage:MessageProperties,
+  viewModel:Translation
+}
+
+const ChangePassword= (props: ChangePasswordProp)=>{
   const [username,setUsername] = useState("");
   const [passwordOne,setPasswordOne] = useState("");
   const [passwordTwo,setPasswordTwo] = useState("");
+  const [displayMessage,setDisplayMessage] = useState({}as MessageProperties);
+  
+  useEffect (()=>{
+    setDisplayMessage(props.displayMessage)
+  },[props.displayMessage])
   const saveChange =()=>{
     console.log('inside createAccount')
     if(username && passwordOne===passwordTwo  && passwordOne){
       console.log('trigger create')
-      changePasswordHandler(username,passwordOne)
+      props.changePasswordHandler(username,passwordOne)
+    }else {
+      setDisplayMessage(
+        {
+          message:'Please enter same password!',
+          isError:true
+        }as MessageProperties
+      )
     }
   }
   return (
@@ -34,6 +60,18 @@ const ChangePassword= ({changePasswordHandler})=>{
           placeholder="*********"
           onChange={event=>{event && setPasswordTwo(event.target.value)}}
         />
+        {displayMessage &&     
+          <div className="errorOrSuccess">
+            {displayMessage.isError ?
+              <div className="error-message">
+                  {displayMessage.message}
+              </div>:
+              <div className="success-message">
+                  {displayMessage.message}  
+              </div>
+          }
+          </div>
+        }
         <button className="new-account-btn active-btn btn each-element" onClick={saveChange}>
           Save changes
         </button>
@@ -49,11 +87,12 @@ const DeleteAccount=({deleteAccountHandler})=>{
     </div>
   )
 }
-const SecurityModification=({deleteAccountHandler,changePasswordHandler})=>{
+
+const SecurityModification=(props:SecurityModificationProp)=>{
     return (
     <div className="security-modification">
-      <ChangePassword changePasswordHandler={changePasswordHandler}/>
-      <DeleteAccount deleteAccountHandler={deleteAccountHandler}/>
+      <ChangePassword changePasswordHandler={props.changePasswordHandler} viewModel={props.viewModel} displayMessage={props.changePasswordMessage}/>
+      <DeleteAccount deleteAccountHandler={props.deleteAccountHandler}/>
     </div>
     )
   }

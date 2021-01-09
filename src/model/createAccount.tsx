@@ -6,5 +6,5 @@ export interface CreateAccountRequest extends HttpRequest {
 }
 export interface CreateAccountResponse  extends HttpResponse{
     
-    jwtTokken:string
+    jwtToken:string
 }

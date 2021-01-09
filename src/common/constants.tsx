@@ -5,3 +5,19 @@ export enum ScreenType{
     SECURITY_MODIFICATION
 }
   
+export enum Language {
+    ENGLISH="English",
+    CHINESE="Chinese",
+    FRENCH="French",
+    GERMAN="German",
+    JAPNESE="Japnese",
+    KOREAN="Korean",
+    THAI="Thai",
+    
+  }
+
+  export enum Privacy {
+    PUBLIC="Public",
+    PRIVATE="Private",
+  }
+  
