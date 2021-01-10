@@ -1,6 +1,7 @@
 import React, {useState,useEffect} from 'react'
 import 'components/useraccount/style/userLoginForm.scss';
 import Translation from 'language/LanguageModel';
+import { emailValidationPattern,EMPTY, INVALID_EMAIL, USERNAME_PASSWORD_NOT_FILLED } from 'common/constants';
 
 interface Props {
   viewModel:Translation,
@@ -12,18 +13,28 @@ interface Props {
 
 const UserLoginForm=(props:Props)=>{
       
-  const [username,setUsername] = useState("");
-  const [password,setPassword] = useState("");
+  const [username,setUsername] = useState(EMPTY);
+  const [password,setPassword] = useState(EMPTY);
   const [validationPass,setValidationPass] = useState(false);
   const [checkError,setcheckError] = useState(false);
-  const [displayError,setDisplayError] = useState("");
+  const [displayError,setDisplayError] = useState(EMPTY);
   
   useEffect(() => {
-      if (username==='' || password ===''){
+      if (username===EMPTY || password ===EMPTY || !emailValidationPattern.test(username)){
         setValidationPass(false)  
       }else 
         setValidationPass(true)  
-      setDisplayError((!validationPass && checkError)?'Enter username and password':'' )
+      
+      //validation failed
+      if((!validationPass && checkError)){ 
+        if(!emailValidationPattern.test(username)){
+          setDisplayError(INVALID_EMAIL)  
+        }else
+          setDisplayError(USERNAME_PASSWORD_NOT_FILLED)
+      }else {
+        setDisplayError(EMPTY)
+      }
+      
   }, [username ,password]);
 
   useEffect(() => {
@@ -31,7 +42,7 @@ const UserLoginForm=(props:Props)=>{
   }, [props.message]);
 
   const loginClick =()=>{
-    if(username && password ){
+    if(username && password && validationPass){
           props.loginClickHandler(username,password)
     }else 
       setcheckError(true)

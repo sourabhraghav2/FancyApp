@@ -1,4 +1,4 @@
-import {Language} from 'common/constants';
+
 export default  class Translation {
     GENERAL:string;
     SECURITY:string;
@@ -11,7 +11,6 @@ export default  class Translation {
     LOGIN:string;
     CREATE_NEW_ACCOUNT:string;
 
-
     LANGUAGE:string;
     PRIVACY:string;
     PUBLIC:string;
@@ -20,24 +19,13 @@ export default  class Translation {
 
     CREATE_A_NEW_ACCOUNT:string;
     
-    
-
     constructor(inputMap:Map<number,String>=new Map()){
-        console.log('inside : constructor')
         
-        
-        new Map()
         const defaultTranslationMap=this.defaultTranslation();
-        
-        console.log('defaultTranslationMap : ',defaultTranslationMap)
         const finalKeyVal=new Map();
-        
         defaultTranslationMap.forEach((v,k) =>{
             finalKeyVal.set(k,inputMap.get(k)?inputMap.get(k):v)
         })
-
-        console.log('finalKeyVal : ',finalKeyVal)
-        console.log('GENERAL : ',finalKeyVal.get(1))
 
         this.GENERAL=finalKeyVal.get(1);
         this.SECURITY=finalKeyVal.get(2);
@@ -109,4 +97,3 @@ export default  class Translation {
         return map    
     }
 }
-

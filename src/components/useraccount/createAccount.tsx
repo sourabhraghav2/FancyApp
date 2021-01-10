@@ -2,6 +2,7 @@ import React, {useState,useEffect} from 'react'
 import 'components/useraccount/style/createAccountForm.scss';
 import Translation from 'language/LanguageModel';
 import { MessageProperties } from './landingPage';
+import { emailValidationPattern, INVALID_EMAIL,PASSWORD_NOT_SAME ,EMPTY} from 'common/constants';
 
 interface Props {
   viewModel:Translation,
@@ -9,9 +10,9 @@ interface Props {
   createAccountMessage:MessageProperties
 }
 const CreateAccountForm=(props:Props)=>{
-  const [username,setUsername] = useState("");
-  const [passwordOne,setPasswordOne] = useState("");
-  const [passwordTwo,setPasswordTwo] = useState("");
+  const [username,setUsername] = useState(EMPTY);
+  const [passwordOne,setPasswordOne] = useState(EMPTY);
+  const [passwordTwo,setPasswordTwo] = useState(EMPTY);
   const [displayMessage,setDisplayMessage] = useState({}as MessageProperties);
   
   useEffect (()=>{
@@ -19,17 +20,35 @@ const CreateAccountForm=(props:Props)=>{
   },[props.createAccountMessage])
 
   const createAccount =()=>{
-    console.log('inside createAccount')
-    if(username && passwordOne===passwordTwo  && passwordOne){
-      console.log('trigger create')
+    if(username && passwordOne===passwordTwo  && passwordOne && emailValidationPattern.test(username)){
       props.createAccountClickHandler(username,passwordOne)
     }else {
+      if(emailValidationPattern.test(username)){
+        setDisplayMessage( {
+          message:INVALID_EMAIL,
+          isError:true
+        }as MessageProperties)
+      }else 
       setDisplayMessage( {
-        message:'Please enter same password!',
+        message:PASSWORD_NOT_SAME,
         isError:true
       }as MessageProperties)
     }
   }
+  useEffect(()=>{
+    
+    if(!emailValidationPattern.test(username)){
+      setDisplayMessage( {
+        message:INVALID_EMAIL,
+        isError:true
+      }as MessageProperties)  
+    }else {
+      setDisplayMessage( {
+        isError:false
+      }as MessageProperties)
+    }
+    
+  },[username])
     return (
     <div className="create-account-form">
         <div className="title each-element">{props.viewModel.CREATE_NEW_ACCOUNT}</div>

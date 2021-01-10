@@ -1,12 +1,11 @@
 export const CookiesHelper=()=> {
     const createCookie = (name:string, value:string, days)=> {
+        var expires=""
         if (days) {
             var date = new Date();
             date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
-            var expires = "; expires=" + date.toUTCString();
+            expires = "; expires=" + date.toUTCString();
         }
-    
-        else var expires = "";
         const newCookie=name + "=" + value + expires + "; path=/";
         document.cookie = newCookie
     }

@@ -2,6 +2,7 @@ import React, {useState,useEffect} from 'react'
 import 'components/useraccount/style/securityModification.scss';
 import Translation from 'language/LanguageModel';
 import { MessageProperties } from './landingPage';
+import { EMPTY, PASSWORD_NOT_SAME } from 'common/constants';
 
 
 interface ChangePasswordProp{
@@ -9,6 +10,7 @@ interface ChangePasswordProp{
   displayMessage:MessageProperties,
   viewModel:Translation
 }
+
 interface SecurityModificationProp {
   deleteAccountHandler,
   changePasswordHandler,
@@ -17,23 +19,21 @@ interface SecurityModificationProp {
 }
 
 const ChangePassword= (props: ChangePasswordProp)=>{
-  const [username,setUsername] = useState("");
-  const [passwordOne,setPasswordOne] = useState("");
-  const [passwordTwo,setPasswordTwo] = useState("");
+  const [username,setUsername] = useState(EMPTY);
+  const [passwordOne,setPasswordOne] = useState(EMPTY);
+  const [passwordTwo,setPasswordTwo] = useState(EMPTY);
   const [displayMessage,setDisplayMessage] = useState({}as MessageProperties);
   
   useEffect (()=>{
     setDisplayMessage(props.displayMessage)
   },[props.displayMessage])
   const saveChange =()=>{
-    console.log('inside createAccount')
     if(username && passwordOne===passwordTwo  && passwordOne){
-      console.log('trigger create')
       props.changePasswordHandler(username,passwordOne)
     }else {
       setDisplayMessage(
         {
-          message:'Please enter same password!',
+          message:PASSWORD_NOT_SAME,
           isError:true
         }as MessageProperties
       )

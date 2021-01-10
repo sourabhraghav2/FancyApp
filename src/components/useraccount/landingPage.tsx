@@ -11,7 +11,7 @@ import SecurityModification from './securityModification';
 import { Service } from 'service/Service';
 import { LoginRequest, LoginResponse } from 'model/LoginRequest';
 import inMemoryJWTManager from 'security/inMemoryJWTManager';
-import { Privacy, ScreenType } from 'common/constants';
+import { EMPTY, LOGIN_FAILED, Privacy, ScreenType } from 'common/constants';
 import { Language } from 'common/constants';
 
 
@@ -29,10 +29,9 @@ export interface MessageProperties{
 const LandingPage =(props)=> {
   const service=new Service()
   const millisecondsToWait = 500;
-  console.log("inside LandingPage : ",JSON.stringify(props))
   const [menuShow,setMenuShow] = useState(false);
   const [loginFormButtonLoading,setLoginFormButtonLoading] = useState(false);
-  const [loginMessage,setLoginMessage] = useState("");
+  const [loginMessage,setLoginMessage] = useState(EMPTY);
   const [viewModel,setViewModel]=useState(new Translation())
 
   const [changePasswordMessage,setChangePasswordMessage]=useState({} as MessageProperties)
@@ -41,7 +40,7 @@ const LandingPage =(props)=> {
 
   const [language,setLanguage]=useState(Language.ENGLISH.toString())
   const [privacy,setPrivacy]=useState( Privacy.PRIVATE.toString())
-  const [username,setUserName]=useState("")
+  const [username,setUserName]=useState(EMPTY)
 
   
   useEffect(() => {
@@ -56,7 +55,6 @@ const LandingPage =(props)=> {
     setViewModel(await service.getLanguage(language))
   }
   useEffect(() => {
-    console.log ("inside useEffect ")
     if(props.screenType!==ScreenType.LOGIN_FORM && props.screenType!==ScreenType.CREATE_ACCOUNT_FORM)
       setMenuShow(true)
     else 
@@ -76,13 +74,11 @@ const LandingPage =(props)=> {
     
   const loginClickHandler= async (username:string,password:string) =>{
     
-    console.log ("inside : loginClickHandler")
     setLoginFormButtonLoading(true)
     const request={username, password} as LoginRequest
-    console.log("Request : ",JSON.stringify(request))
     
-    const resp:LoginResponse= await service.attamptLogin(request) 
-    setLoginMessage("")
+    const resp:LoginResponse= await service.attemptLogin(request) 
+    setLoginMessage(EMPTY)
     //just for the api effect
     setTimeout(function() {
       if(resp.isSuccess){
@@ -93,19 +89,16 @@ const LandingPage =(props)=> {
         setUserName(username)
         setPrivacy(resp.privacy)
         props.changeScreenType(ScreenType.CHANGE_LANGUAGE_FORM)
-        console.log('resp.jwtToken : ',resp.jwtToken)
         inMemoryJWTManager.setToken(resp.jwtToken)
 
       }else {
-        setLoginMessage("Login failed!!")
+        setLoginMessage(LOGIN_FAILED)
       }
       setLoginFormButtonLoading(false)
     }, millisecondsToWait);
-    console.log('inMemoryJWTManager get  : ',inMemoryJWTManager.getToken())
   }
   const createAccountClickHandler =async(username:string,password:string)=>{
     const request={username, password} as CreateAccountRequest
-    console.log("Request : ",JSON.stringify(request))
     const resp:CreateAccountResponse= await service.createAccount(request) 
     if(resp.isSuccess){
       setCreateAccountMessage({
@@ -126,30 +119,22 @@ const LandingPage =(props)=> {
   }
   
   const genaralMenuClickHandler=()=>{
-    console.log('inside : genaralMenuClickHandler')
     props.changeScreenType(ScreenType.CHANGE_LANGUAGE_FORM)
   }
   const securityMenuClickHandler=()=>{
-    console.log('inside : securityMenuClickHandler')
     props.changeScreenType(ScreenType.SECURITY_MODIFICATION)
   
   }
   const LogoutMenuClickHandler=async()=>{
-    console.log('inside : LogoutMenuClickHandler')
     props.changeScreenType(ScreenType.LOGIN_FORM)
     inMemoryJWTManager.ereaseToken()
-    const done=await service.logout() 
-    console.log('Response : ',done)
+    await service.logout() 
   }
   const displayCreateAccountHandler=()=>{
-    console.log ("inside : displayCreateAccountHandler")
-    const jwt=inMemoryJWTManager.getToken()
-    console.log("Jwt : ",jwt)
     props.changeScreenType(ScreenType.CREATE_ACCOUNT_FORM)
     
   }
   const onSaveClickHandler=async(language:Language,privacy:Privacy)=>{
-    console.log('inside onSaveClickHandler : ',language," : ",privacy)    
     setViewModel (new Translation())
     const request={
       language,privacy,username
@@ -159,7 +144,6 @@ const LandingPage =(props)=> {
       setLanguage(language)
       loadLanguage(language)
     }
-    console.log("resp : ",JSON.stringify(resp))
     setChangeLanguageMessage({
       message:resp.msg,
       isError:!resp.isSuccess
@@ -167,9 +151,7 @@ const LandingPage =(props)=> {
   }
   const changePasswordHandler =async(username:string,password:string)=>{
     const request={username, password} as ChangePasswordRequest
-    console.log("Request : ",JSON.stringify(request))
     const resp:ChangePasswordResponse= await service.changePassword(request) 
-    console.log('Response : ',resp.isSuccess)
 
     setChangePasswordMessage({
       message:resp.msg,
@@ -178,11 +160,9 @@ const LandingPage =(props)=> {
   }
   
   const deleteAccountHandler =async()=>{
-    console.log('inside : LogoutMenuClickHandler')
     props.changeScreenType(ScreenType.LOGIN_FORM)
     inMemoryJWTManager.ereaseToken()
-    const done=await service.delete(username) 
-    console.log('Response : ',done)
+    await service.delete(username) 
   }
   
   
@@ -232,7 +212,6 @@ const LandingPage =(props)=> {
 }
 
 function mapStateToProps(state) {
-  console.log ("inside mapStateToProps: ",JSON.stringify(state))
     return {
       screenType: state.userStore.screenType
     };

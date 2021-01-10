@@ -8,6 +8,7 @@ const inMemoryJWTManager = () => {
         return true;
     };
     const ereaseToken = () => {
+        cookieService.eraseCookie('jwt')
         return true;
     }
     return {

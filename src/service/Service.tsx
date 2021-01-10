@@ -10,20 +10,19 @@ export class Service {
     service=HttpService()        
 
     async getLanguage(language: String): Promise<Translation> {
-        console.log ('inside : attamptLogin')
+        console.log ('inside : attemptLogin')
         const url=`languages/getLanguage/${language}`
         const resp= await this.service.get(url) 
         var inputMap:Map<number,String>=new Map();
         if(resp.isSuccess && resp.data){
             for (var key in resp.data) {
-                console.log ('key : ',key); console.log('Value : ',resp.data[key])
                 inputMap.set(parseInt(key),resp.data[key])
             }
         }
-        return new Translation(inputMap=inputMap)
+        return new Translation(inputMap)
     }
-    async attamptLogin(request: LoginRequest): Promise<LoginResponse> {
-        console.log ('inside : attamptLogin')
+    async attemptLogin(request: LoginRequest): Promise<LoginResponse> {
+        console.log ('inside : attemptLogin')
         return await this.service.post(request,'users/login') as LoginResponse
     }
     async changePassword(request: ChangePasswordRequest): Promise<ChangePasswordResponse> {
